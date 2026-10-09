@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git vs GitHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --git-orange: #F05032;
+            --github-dark: #24292e;
+            --github-blue: #0366d6;
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: #1c2128;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --accent-gradient: linear-gradient(135deg, #F05032, #e8491d);
+            --github-gradient: linear-gradient(135deg, #24292e, #586069);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            transition: all 0.3s ease;
+        }
+
+        body.urdu {
+            font-family: 'Noto Nastaliq Urdu', 'Poppins', serif;
+            direction: rtl;
+            text-align: right;
+        }
+
+        /* ============ LANGUAGE SWITCHER ============ */
+        .lang-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 0;
+        }
+
+        .lang-bar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #F05032, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .lang-buttons {
+            display: flex;
+            gap: 8px;
+            background: var(--bg-secondary);
+            border-radius: 50px;
+            padding: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .lang-btn {
+            padding: 8px 24px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: transparent;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lang-btn.active {
+            background: var(--accent-gradient);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(240, 80, 50, 0.4);
+        }
+
+        .lang-btn:hover:not(.active) {
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .lang-btn .flag {
+            font-size: 1.2rem;
+        }
+
+        /* ============ CONTAINER ============ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ============ HERO SECTION ============ */
+        .hero {
+            margin-top: 70px;
+            padding: 100px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(240, 80, 50, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(3, 102, 214, 0.08) 0%, transparent 50%);
+            animation: bgPulse 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgPulse {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 20px;
+            background: rgba(240, 80, 50, 0.1);
+            border: 1px solid rgba(240, 80, 50, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--git-orange);
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero h1 .git-text {
+            color: var(--git-orange);
+        }
+
+        .hero h1 .vs-text {
+            color: var(--text-secondary);
+            font-size: 2rem;
+            margin: 0 8px;
+        }
+
+        .hero h1 .github-text {
+            color: #fff;
+        }
+
+        .hero-desc {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto 40px;
+            line-height: 1.9;
+        }
+
+        body.urdu .hero-desc {
+            font-size: 1.3rem;
+            line-height: 2.4;
+        }
+
+        .hero-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .hero-icon-box {
+            width: 100px;
+            height: 100px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            position: relative;
+        }
+
+        .hero-icon-box.git-icon {
+            background: rgba(240, 80, 50, 0.15);
+            border: 2px solid rgba(240, 80, 50, 0.3);
+        }
+
+        .hero-icon-box.github-icon {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .vs-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* ============ SECTION STYLES ============ */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        body.urdu .section-header p {
+            font-size: 1.2rem;
+            line-height: 2.2;
+        }
+
+        .section-line {
+            width: 60px;
+            height: 4px;
+            background: var(--accent-gradient);
+            border-radius: 4px;
+            margin: 16px auto 0;
+        }
+
+        /* ============ WHAT IS SECTION ============ */
+        .what-is-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .what-is-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .what-is-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .what-is-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .what-is-card.git-card::before {
+            background: var(--accent-gradient);
+        }
+
+        .what-is-card.github-card::before {
+            background: var(--github-gradient);
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .git-card .card-icon {
+            background: rgba(240, 80, 50, 0.15);
+        }
+
+        .github-card .card-icon {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .what-is-card h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .git-card h3 {
+            color: var(--git-orange);
+        }
+
+        .what-is-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.9;
+        }
+
+        body.urdu .what-is-card p {
+            font-size: 1.1rem;
+            line-height: 2.4;
+        }
+
+        .card-features {
+            margin-top: 24px;
+            list-style: none;
+        }
+
+        .card-features li {
+            padding: 8px 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.92rem;
+        }
+
+        body.urdu .card-features li {
+            font-size: 1.05rem;
+            line-height: 2.2;
+        }
+
+        .card-features li .check {
+            color: #3fb950;
+            font-size: 1rem;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        /* ============ DIFFERENCES TABLE ============ */
+        .diff-section {
+            background: var(--bg-secondary);
+        }
+
+        .diff-table-wrapper {
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+        }
+
+        .diff-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .diff-table thead th {
+            padding: 20px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        body.urdu .diff-table thead th {
+            text-align: right;
+        }
+
+        .diff-table thead th:first-child {
+            background: rgba(139, 148, 158, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .diff-table thead th:nth-child(2) {
+            background: rgba(240, 80, 50, 0.1);
+            color: var(--git-orange);
+        }
+
+        .diff-table thead th:nth-child(3) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .diff-table tbody td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        body.urdu .diff-table tbody td {
+            font-size: 1.05rem;
+            line-height: 2.2;
+            text-align: right;
+        }
+
+        .diff-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .diff-table tbody tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .diff-table tbody td:first-child {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ============ KEY CONCEPTS ============ */
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .concept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .concept-card:hover {
+            border-color: var(--git-orange);
+            transform: translateY(-3px);
+        }
+
+        .concept-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .concept-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .concept-card p {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        body.urdu .concept-card p {
+            font-size: 1rem;
+            line-height: 2.2;
+        }
+
+        /* ============ COMMANDS SECTION ============ */
+        .commands-section {
+            background: var(--bg-secondary);
+        }
+
+        .commands-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .cmd-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .cmd-card:hover {
+            border-color: rgba(240, 80, 50, 0.4);
+        }
+
+        .cmd-code {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-primary);
+            color: #58a6ff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            display: block;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .cmd-desc {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        body.urdu .cmd-desc {
+            font-size: 1rem;
+            line-height: 2;
+        }
+
+        /* ============ WORKFLOW SECTION ============ */
+        .workflow-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .workflow-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px 28px;
+            text-align: center;
+            min-width: 160px;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            transform: scale(1.05);
+            border-color: var(--git-orange);
+        }
+
+        .workflow-step .step-num {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .workflow-step h4 {
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .workflow-step p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        body.urdu .workflow-step p {
+            font-size: 0.95rem;
+            line-height: 2;
+        }
+
+        .workflow-arrow {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        /* ============ FOOTER ============ */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        footer .heart {
+            color: var(--git-orange);
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero h1 .vs-text {
+                font-size: 1.4rem;
+            }
+
+            .what-is-grid,
+            .commands-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .concepts-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .diff-table-wrapper {
+                overflow-x: auto;
+            }
+
+            .workflow-container {
+                flex-direction: column;
+            }
+
+            .workflow-arrow {
+                transform: rotate(90deg);
+            }
+
+            body.urdu .workflow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .lang-bar .container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .hero-icons {
+                gap: 20px;
+            }
+
+            .hero-icon-box {
+                width: 70px;
+                height: 70px;
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .concepts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============ ANIMATIONS ============ */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* SVG Icons inline */
+        .svg-git {
+            width: 40px;
+            height: 40px;
+        }
+
+        .svg-github {
+            width: 40px;
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== LANGUAGE BAR ====== -->
+    <nav class="lang-bar">
+        <div class="container">
+            <div class="logo-text">
+                <span>⚡</span> Git vs GitHub
+            </div>
+            <div class="lang-buttons">
+                <button class="lang-btn active" onclick="switchLang('en')" id="btn-en">
+                    <span class="flag">🇬🇧</span> English
+                </button>
+                <button class="lang-btn" onclick="switchLang('ur')" id="btn-ur">
+                    <span class="flag">🇵🇰</span> اردو
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ====== HERO ====== -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-badge" data-en="🔍 Complete Guide" data-ur="🔍 مکمل گائیڈ">🔍 Complete Guide</div>
+            <h1>
+                <span class="git-text">Git</span>
+                <span class="vs-text">VS</span>
+                <span class="github-text">GitHub</span>
+            </h1>
+            <p class="hero-desc" data-en="Understanding the difference between Git and GitHub is essential for every developer. Let's explore what makes them different and how they work together."
+               data-ur="Git اور GitHub کے درمیان فرق سمجھنا ہر ڈیولپر کے لیے ضروری ہے۔ آئیے جانتے ہیں کہ ان میں کیا فرق ہے اور یہ ایک ساتھ کیسے کام کرتے ہیں۔">
+                Understanding the difference between Git and GitHub is essential for every developer. Let's explore what makes them different and how they work together.
+            </p>
+            <div class="hero-icons">
+                <div class="hero-icon-box git-icon">
+                    <svg class="svg-git" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M251.172 116.594L139.4 4.828c-6.433-6.437-16.873-6.437-23.314 0l-23.21 23.21 29.443 29.443c6.842-2.312 14.688-.761 20.142 4.693 5.48 5.489 7.02 13.402 4.652 20.266l28.375 28.376c6.865-2.365 14.786-.835 20.269 4.657 7.663 7.66 7.663 20.075 0 27.74-7.665 7.666-20.08 7.666-27.749 0-5.764-5.77-7.188-14.235-4.27-21.336l-26.462-26.462-.003 69.637c1.868.93 3.632 2.13 5.196 3.694 7.66 7.66 7.66 20.078 0 27.747-7.665 7.662-20.086 7.662-27.74 0-7.663-7.669-7.663-20.087 0-27.746 1.97-1.966 4.236-3.428 6.674-4.38v-70.27c-2.438-.956-4.706-2.42-6.674-4.384-5.8-5.794-7.205-14.293-4.236-21.413L87.89 39.086l-83.06 83.065c-6.44 6.443-6.44 16.884 0 23.322l111.774 111.768c6.435 6.438 16.873 6.438 23.316 0L251.172 139.92c6.44-6.44 6.44-16.887 0-23.326" fill="#F05032"/>
+                    </svg>
+                </div>
+                <div class="vs-circle">VS</div>
+                <div class="hero-icon-box github-icon">
+                    <svg class="svg-github" viewBox="0 0 98 96" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z" fill="#fff"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== WHAT IS GIT / GITHUB ====== -->
+    <section id="what-is">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 data-en="What are Git & GitHub?" data-ur="Git اور GitHub کیا ہیں؟">What are Git & GitHub?</h2>
+                <p data-en="Learn the basics of both technologies" data-ur="دونوں ٹیکنالوجیز کی بنیادی باتیں سیکھیں">Learn the basics of both technologies</p>
+                <div class="section-line"></div>
+            </div>
+            <div class="what-is-grid">
+                <!-- Git Card -->
+                <div class="what-is-card git-card fade-in">
+                    <div class="card-icon">
+                        <svg width="32" height="32" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M251.172 116.594L139.4 4.828c-6.433-6.437-16.873-6.437-23.314 0l-23.21 23.21 29.443 29.443c6.842-2.312 14.688-.761 20.142 4.693 5.48 5.489 7.02 13.402 4.652 20.266l28.375 28.376c6.865-2.365 14.786-.835 20.269 4.657 7.663 7.66 7.663 20.075 0 27.74-7.665 7.666-20.08 7.666-27.749 0-5.764-5.77-7.188-14.235-4.27-21.336l-26.462-26.462-.003 69.637c1.868.93 3.632 2.13 5.196 3.694 7.66 7.66 7.66 20.078 0 27.747-7.665 7.662-20.086 7.662-27.74 0-7.663-7.669-7.663-20.087 0-27.746 1.97-1.966 4.236-3.428 6.674-4.38v-70.27c-2.438-.956-4.706-2.42-6.674-4.384-5.8-5.794-7.205-14.293-4.236-21.413L87.89 39.086l-83.06 83.065c-6.44 6.443-6.44 16.884 0 23.322l111.774 111.768c6.435 6.438 16.873 6.438 23.316 0L251.172 139.92c6.44-6.44 6.44-16.887 0-23.326" fill="#F05032"/>
+                        </svg>
+                    </div>
+                    <h3 data-en="Git" data-ur="Git (گٹ)">Git</h3>
+                    <p data-en="Git is a free and open-source distributed version control system designed to handle everything from small to very large projects with speed and efficiency. It was created by Linus Torvalds in 2005."
+                       data-ur="Git ایک مفت اور اوپن سورس ڈسٹری بیوٹڈ ورژن کنٹرول سسٹم ہے جو چھوٹے سے بڑے پروجیکٹس کو تیزی اور مؤثر طریقے سے سنبھالنے کے لیے ڈیزائن کیا گیا ہے۔ اسے لینکس ٹوروالڈز نے 2005 میں بنایا تھا۔">
+                        Git is a free and open-source distributed version control system designed to handle everything from small to very large projects with speed and efficiency. It was created by Linus Torvalds in 2005.
+                    </p>
+                    <ul class="card-features">
+                        <li><span class="check">✓</span> <span data-en="Runs locally on your computer" data-ur="آپ کے کمپیوٹر پر مقامی طور پر چلتا ہے">Runs locally on your computer</span></li>
+                        <li><span class="check">✓</span> <span data-en="Tracks changes in your code" data-ur="آپ کے کوڈ میں تبدیلیوں کو ٹریک کرتا ہے">Tracks changes in your code</span></li>
+                        <li><span class="check">✓</span> <span data-en="Works offline — no internet needed" data-ur="آف لائن کام کرتا ہے — انٹرنیٹ کی ضرورت نہیں">Works offline — no internet needed</span></li>
+                        <li><span class="check">✓</span> <span data-en="Manages code history and branches" data-ur="کوڈ کی تاریخ اور برانچز کا انتظام کرتا ہے">Manages code history and branches</span></li>
+                        <li><span class="check">✓</span> <span data-en="Free and open-source software" data-ur="مفت اور اوپن سورس سافٹ ویئر ہے">Free and open-source software</span></li>
+                    </ul>
+                </div>
+                <!-- GitHub Card -->
+                <div class="what-is-card github-card fade-in">
+                    <div class="card-icon">
+                        <svg width="32" height="32" viewBox="0 0 98 96" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z" fill="#fff"/>
+                        </svg>
+                    </div>
+                    <h3 data-en="GitHub" data-ur="GitHub (گٹ ہب)">GitHub</h3>
+                    <p data-en="GitHub is a cloud-based hosting service for Git repositories. It provides a web interface, collaboration features, and social coding tools. It was founded in 2008 and acquired by Microsoft in 2018."
+                       data-ur="GitHub ایک کلاؤڈ پر مبنی ہوسٹنگ سروس ہے جو Git ریپوزٹریز کے لیے استعمال ہوتی ہے۔ یہ ویب انٹرفیس، تعاون کی خصوصیات اور سوشل کوڈنگ ٹولز فراہم کرتا ہے۔ اسے 2008 میں بنایا گیا اور 2018 میں مائیکروسافٹ نے خریدا۔">
+                        GitHub is a cloud-based hosting service for Git repositories. It provides a web interface, collaboration features, and social coding tools. It was founded in 2008 and acquired by Microsoft in 2018.
+                    </p>
+                    <ul class="card-features">
+                        <li><span class="check">✓</span> <span data-en="Cloud-based platform (online)" data-ur="کلاؤڈ پر مبنی پلیٹ فارم (آن لائن)">Cloud-based platform (online)</span></li>
+                        <li><span class="check">✓</span> <span data-en="Team collaboration & code review" data-ur="ٹیم کا تعاون اور کوڈ ریویو">Team collaboration & code review</span></li>
+                        <li><span class="check">✓</span> <span data-en="Pull requests & issue tracking" data-ur="پل ریکوئسٹ اور ایشو ٹریکنگ">Pull requests & issue tracking</span></li>
+                        <li><span class="check">✓</span> <span data-en="GitHub Actions for CI/CD" data-ur="CI/CD کے لیے GitHub Actions">GitHub Actions for CI/CD</span></li>
+                        <li><span class="check">✓</span> <span data-en="Social features — stars, forks, followers" data-ur="سوشل فیچرز — سٹارز، فورکس، فالوورز">Social features — stars, forks, followers</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== DIFFERENCES TABLE ====== -->
+    <section class="diff-section" id="differences">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 data-en="Key Differences" data-ur="اہم فرق">Key Differences</h2>
+                <p data-en="Side-by-side comparison of Git and GitHub" data-ur="Git اور GitHub کا آمنے سامنے موازنہ">Side-by-side comparison of Git and GitHub</p>
+                <div class="section-line"></div>
+            </div>
+            <div class="diff-table-wrapper fade-in">
+                <table class="diff-table">
+                    <thead>
+                        <tr>
+                            <th data-en="Feature" data-ur="خصوصیت">Feature</th>
+                            <th data-en="🔥 Git" data-ur="🔥 Git">🔥 Git</th>
+                            <th data-en="🐙 GitHub" data-ur="🐙 GitHub">🐙 GitHub</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-en="Type" data-ur="قسم">Type</td>
+                            <td data-en="Software / Tool" data-ur="سافٹ ویئر / ٹول">Software / Tool</td>
+                            <td data-en="Web-based Platform / Service" data-ur="ویب پر مبنی پلیٹ فارم / سروس">Web-based Platform / Service</td>
+                        </tr>
+                        <tr>
+                            <td data-en="Installation" data-ur="انسٹالیشن">Installation</td>
+                            <td data-en="Installed locally on your PC" data-ur="آپ کے کمپیوٹر پر انسٹال ہوتا ہے">Installed locally on your PC</td>
+                            <td data-en="Used online via browser" data-ur="براؤزر کے ذریعے آن لائن استعمال ہوتا ہے">Used online via browser</td>
+                        </tr>
+                        <tr>
+                            <td data-en="Internet" data-ur="انٹرنیٹ">Internet</td>
+                            <td data-en="Works offline ✅" data-ur="آف لائن کام کرتا ہے ✅">Works offline ✅</td>
+                            <td data-en="Requires internet 🌐" data-ur="انٹرنیٹ ضروری ہے 🌐">Requires internet 🌐</td>
+                        </tr>
+                        <tr>
+                            <td data-en="Purpose" data-ur="مقصد">Purpose</td>
+                            <td data-en="Version control & tracking" data-ur="ورژن کنٹرول اور ٹریکنگ">Version control & tracking</td>
+                            <td data-en="Hosting, collaboration & sharing" data-ur="ہوسٹنگ، تعاون اور شیئرنگ">Hosting, collaboration & sharing</td>
+                        </tr>
+                        <tr>
+                            <td data-en="Interface" data-ur="انٹرفیس">Interface</td>
+                            <td data-en="Command Line (Terminal)" data-ur="کمانڈ لائن (ٹرمینل)">Command Line (Terminal)</td>
+                            <td data-en="Graphical Web Interface (GUI)" data-ur="گرافیکل ویب انٹرفیس (GUI)">Graphical Web Interface (GUI)</td>
+                        </tr>
+                        <tr>
+                            <td data-en="Created By" data-ur="بنانے والا">Created By</td>
+                            <td data-en="Linus Torvalds (2005)" data-ur="لینکس ٹوروالڈز (2005)">Linus Torvalds (2005)</td>
+                            <td data-en="Tom Preston-Werner (2008)" data-ur="ٹام پریسٹن ورنر (2008)">Tom Preston-Werner (2008)</td>
+                        </tr>
+                        <tr>
+                            <td data-en="Data Storage" data-ur="ڈیٹا سٹوریج">Data Storage</td>
+                            <td data-en="Local machine" data-ur="مقامی مشین">Local machine</td>
+                            <td data-en="Cloud servers" data-ur="کلاؤڈ سرورز">Cloud servers</td>
+                        </tr>
+                        <tr>
+                            <td data-en="Collaboration" data-ur="تعاون">Collaboration</td>
+                            <td data-en="Limited (manual sharing)" data-ur="محدود (دستی شیئرنگ)">Limited (manual sharing)</td>
+                            <td data-en="Built-in team tools" data-ur="بلٹ ان ٹیم ٹولز">Built-in team tools</td>
+                        </tr>
+                        <tr>
+                            <td data-en="Cost" data-ur="قیمت">Cost</td>
+                            <td data-en="Completely free" data-ur="بالکل مفت">Completely free</td>
+                            <td data-en="Free + Paid plans" data-ur="مفت + ادا شدہ پلانز">Free + Paid plans</td>
+                        </tr>
+                        <tr>
+                            <td data-en="Competitor" data-ur="حریف">Competitor</td>
+                            <td data-en="Mercurial, SVN" data-ur="Mercurial, SVN">Mercurial, SVN</td>
+                            <td data-en="GitLab, Bitbucket" data-ur="GitLab, Bitbucket">GitLab, Bitbucket</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== KEY CONCEPTS ====== -->
+    <section id="concepts">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 data-en="Key Concepts" data-ur="اہم تصورات">Key Concepts</h2>
+                <p data-en="Important terms you should know" data-ur="اہم اصطلاحات جو آپ کو معلوم ہونی چاہئیں">Important terms you should know</p>
+                <div class="section-line"></div>
+            </div>
+            <div class="concepts-grid">
+                <div class="concept-card fade-in">
+                    <div class="concept-emoji">📦</div>
+                    <h4 data-en="Repository (Repo)" data-ur="ریپوزٹری (ریپو)">Repository (Repo)</h4>
+                    <p data-en="A folder that contains your project files and the entire history of changes made to them."
+                       data-ur="ایک فولڈر جس میں آپ کے پروجیکٹ کی فائلیں اور ان میں کی گئی تمام تبدیلیوں کی مکمل تاریخ ہوتی ہے۔">
+                        A folder that contains your project files and the entire history of changes made to them.
+                    </p>
+                </div>
+                <div class="concept-card fade-in">
+                    <div class="concept-emoji">🌿</div>
+                    <h4 data-en="Branch" data-ur="برانچ">Branch</h4>
+                    <p data-en="A separate line of development. Allows you to work on features without affecting the main code."
+                       data-ur="ڈیولپمنٹ کی ایک الگ لائن۔ آپ کو مین کوڈ کو متاثر کیے بغیر نئے فیچرز پر کام کرنے دیتی ہے۔">
+                        A separate line of development. Allows you to work on features without affecting the main code.
+                    </p>
+                </div>
+                <div class="concept-card fade-in">
+                    <div class="concept-emoji">💾</div>
+                    <h4 data-en="Commit" data-ur="کمٹ">Commit</h4>
+                    <p data-en="A snapshot of your changes. Each commit has a unique ID and message describing what changed."
+                       data-ur="آپ کی تبدیلیوں کا ایک سنیپ شاٹ۔ ہر کمٹ کی ایک منفرد آئی ڈی اور پیغام ہوتا ہے جو بتاتا ہے کیا بدلا۔">
+                        A snapshot of your changes. Each commit has a unique ID and message describing what changed.
+                    </p>
+                </div>
+                <div class="concept-card fade-in">
+                    <div class="concept-emoji">🔀</div>
+                    <h4 data-en="Merge" data-ur="مرج">Merge</h4>
+                    <p data-en="Combining changes from one branch into another. Brings separate work together."
+                       data-ur="ایک برانچ کی تبدیلیوں کو دوسری برانچ میں ملانا۔ الگ الگ کام کو اکٹھا کرتا ہے۔">
+                        Combining changes from one branch into another. Brings separate work together.
+                    </p>
+                </div>
+                <div class="concept-card fade-in">
+                    <div class="concept-emoji">📤</div>
+                    <h4 data-en="Push & Pull" data-ur="پُش اور پُل">Push & Pull</h4>
+                    <p data-en="Push sends your local commits to GitHub. Pull downloads changes from GitHub to your local machine."
+                       data-ur="پُش آپ کے مقامی کمٹس کو GitHub پر بھیجتا ہے۔ پُل GitHub سے تبدیلیاں آپ کی مشین پر ڈاؤن لوڈ کرتا ہے۔">
+                        Push sends your local commits to GitHub. Pull downloads changes from GitHub to your local machine.
+                    </p>
+                </div>
+                <div class="concept-card fade-in">
+                    <div class="concept-emoji">🔃</div>
+                    <h4 data-en="Pull Request (PR)" data-ur="پُل ریکوئسٹ (PR)">Pull Request (PR)</h4>
+                    <p data-en="A GitHub feature to propose changes. Team members can review, discuss, and approve before merging."
+                       data-ur="تبدیلیاں تجویز کرنے کا GitHub فیچر۔ ٹیم ممبرز مرج کرنے سے پہلے ریویو، بحث اور منظوری دے سکتے ہیں۔">
+                        A GitHub feature to propose changes. Team members can review, discuss, and approve before merging.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== COMMON COMMANDS ====== -->
+    <section class="commands-section" id="commands">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 data-en="Essential Git Commands" data-ur="ضروری Git کمانڈز">Essential Git Commands</h2>
+                <p data-en="Most commonly used Git commands every developer should know" data-ur="سب سے زیادہ استعمال ہونے والی Git کمانڈز جو ہر ڈیولپر کو آنی چاہئیں">Most commonly used Git commands every developer should know</p>
+                <div class="section-line"></div>
+            </div>
+            <div class="commands-grid">
+                <div class="cmd-card fade-in">
+                    <code class="cmd-code">git init</code>
+                    <p class="cmd-desc" data-en="Initialize a new Git repository in your project folder" data-ur="اپنے پروجیکٹ فولڈر میں نئی Git ریپوزٹری شروع کریں">Initialize a new Git repository in your project folder</p>
+                </div>
+                <div class="cmd-card fade-in">
+                    <code class="cmd-code">git clone &lt;url&gt;</code>
+                    <p class="cmd-desc" data-en="Copy a remote repository to your local machine" data-ur="ریموٹ ریپوزٹری کو اپنی مقامی مشین پر کاپی کریں">Copy a remote repository to your local machine</p>
+                </div>
+                <div class="cmd-card fade-in">
+                    <code class="cmd-code">git add .</code>
+                    <p class="cmd-desc" data-en="Stage all changed files for the next commit" data-ur="اگلے کمٹ کے لیے تمام تبدیل شدہ فائلوں کو سٹیج کریں">Stage all changed files for the next commit</p>
+                </div>
+                <div class="cmd-card fade-in">
+                    <code class="cmd-code">git commit -m "message"</code>
+                    <p class="cmd-desc" data-en="Save staged changes with a descriptive message" data-ur="سٹیج شدہ تبدیلیوں کو ایک وضاحتی پیغام کے ساتھ محفوظ کریں">Save staged changes with a descriptive message</p>
+                </div>
+                <div class="cmd-card fade-in">
+                    <code class="cmd-code">git push origin main</code>
+                    <p class="cmd-desc" data-en="Upload your local commits to GitHub" data-ur="اپنے مقامی کمٹس کو GitHub پر اپ لوڈ کریں">Upload your local commits to GitHub</p>
+                </div>
+                <div class="cmd-card fade-in">
+                    <code class="cmd-code">git pull</code>
+                    <p class="cmd-desc" data-en="Download and merge changes from the remote repository" data-ur="ریموٹ ریپوزٹری سے تبدیلیاں ڈاؤن لوڈ اور مرج کریں">Download and merge changes from the remote repository</p>
+                </div>
+                <div class="cmd-card fade-in">
+                    <code class="cmd-code">git branch &lt;name&gt;</code>
+                    <p class="cmd-desc" data-en="Create a new branch for separate development" data-ur="الگ ڈیولپمنٹ کے لیے نئی برانچ بنائیں">Create a new branch for separate development</p>
+                </div>
+                <div class="cmd-card fade-in">
+                    <code class="cmd-code">git status</code>
+                    <p class="cmd-desc" data-en="Check which files are modified, staged, or untracked" data-ur="چیک کریں کون سی فائلیں تبدیل، سٹیج یا ان ٹریکڈ ہیں">Check which files are modified, staged, or untracked</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== WORKFLOW ====== -->
+    <section id="workflow">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 data-en="How They Work Together" data-ur="یہ ایک ساتھ کیسے کام کرتے ہیں">How They Work Together</h2>
+                <p data-en="The typical workflow of Git + GitHub" data-ur="Git + GitHub کا عمومی ورک فلو">The typical workflow of Git + GitHub</p>
+                <div class="section-line"></div>
+            </div>
+            <div class="workflow-container fade-in">
+                <div class="workflow-step">
+                    <div class="step-num">1</div>
+                    <h4 data-en="Write Code" data-ur="کوڈ لکھیں">Write Code</h4>
+                    <p data-en="Create or edit files locally" data-ur="مقامی طور پر فائلیں بنائیں یا ترمیم کریں">Create or edit files locally</p>
+                </div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">
+                    <div class="step-num">2</div>
+                    <h4 data-en="Git Add" data-ur="Git Add">Git Add</h4>
+                    <p data-en="Stage your changes" data-ur="اپنی تبدیلیاں سٹیج کریں">Stage your changes</p>
+                </div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">
+                    <div class="step-num">3</div>
+                    <h4 data-en="Git Commit" data-ur="Git Commit">Git Commit</h4>
+                    <p data-en="Save a snapshot" data-ur="سنیپ شاٹ محفوظ کریں">Save a snapshot</p>
+                </div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">
+                    <div class="step-num">4</div>
+                    <h4 data-en="Git Push" data-ur="Git Push">Git Push</h4>
+                    <p data-en="Upload to GitHub" data-ur="GitHub پر اپ لوڈ کریں">Upload to GitHub</p>
+                </div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">
+                    <div class="step-num">5</div>
+                    <h4 data-en="Collaborate" data-ur="تعاون کریں">Collaborate</h4>
+                    <p data-en="Team reviews & merges" data-ur="ٹیم ریویو اور مرج کرے">Team reviews & merges</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== ANALOGY SECTION ====== -->
+    <section class="diff-section" id="analogy">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 data-en="Simple Analogy 💡" data-ur="آسان مثال 💡">Simple Analogy 💡</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="what-is-grid">
+                <div class="what-is-card git-card fade-in" style="text-align:center;">
+                    <div style="font-size:4rem; margin-bottom:20px;">📝</div>
+                    <h3 data-en="Git = Microsoft Word" data-ur="Git = مائیکروسافٹ ورڈ">Git = Microsoft Word</h3>
+                    <p data-en="Git is like Microsoft Word — it's the software on your computer that lets you write and save documents (track changes in your code)."
+                       data-ur="Git مائیکروسافٹ ورڈ کی طرح ہے — یہ آپ کے کمپیوٹر پر موجود سافٹ ویئر ہے جو آپ کو دستاویزات لکھنے اور محفوظ کرنے (کوڈ میں تبدیلیوں کو ٹریک کرنے) دیتا ہے۔">
+                        Git is like Microsoft Word — it's the software on your computer that lets you write and save documents (track changes in your code).
+                    </p>
+                </div>
+                <div class="what-is-card github-card fade-in" style="text-align:center;">
+                    <div style="font-size:4rem; margin-bottom:20px;">☁️</div>
+                    <h3 data-en="GitHub = Google Drive" data-ur="GitHub = گوگل ڈرائیو">GitHub = Google Drive</h3>
+                    <p data-en="GitHub is like Google Drive — it's the online platform where you upload, store, share, and collaborate on those documents with others."
+                       data-ur="GitHub گوگل ڈرائیو کی طرح ہے — یہ وہ آن لائن پلیٹ فارم ہے جہاں آپ ان دستاویزات کو اپ لوڈ، اسٹور، شیئر اور دوسروں کے ساتھ تعاون کرتے ہیں۔">
+                        GitHub is like Google Drive — it's the online platform where you upload, store, share, and collaborate on those documents with others.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SUMMARY ====== -->
+    <section id="summary">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 data-en="Summary ✨" data-ur="خلاصہ ✨">Summary ✨</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="what-is-card fade-in" style="max-width:800px; margin:0 auto; text-align:center; border: 1px solid var(--border-color); background: var(--bg-card);">
+                <p style="font-size:1.15rem; line-height: 2; color: var(--text-secondary);"
+                   data-en="<strong style='color:#F05032;'>Git</strong> is the <strong style='color:var(--text-primary);'>engine</strong> — the version control tool that runs on your computer.<br><br><strong style='color:#fff;'>GitHub</strong> is the <strong style='color:var(--text-primary);'>garage</strong> — the online platform where you park (host) your code, collaborate with others, and showcase your projects.<br><br>🎯 You <strong style='color:var(--text-primary);'>need Git</strong> to use GitHub, but you <strong style='color:var(--text-primary);'>don't need GitHub</strong> to use Git!"
+                   data-ur="<strong style='color:#F05032;'>Git</strong> ایک <strong style='color:var(--text-primary);'>انجن</strong> ہے — ورژن کنٹرول ٹول جو آپ کے کمپیوٹر پر چلتا ہے۔<br><br><strong style='color:#fff;'>GitHub</strong> ایک <strong style='color:var(--text-primary);'>گیراج</strong> ہے — آن لائن پلیٹ فارم جہاں آپ اپنا کوڈ پارک (ہوسٹ) کرتے ہیں، دوسروں کے ساتھ تعاون کرتے ہیں اور اپنے پروجیکٹس دکھاتے ہیں۔<br><br>🎯 آپ کو GitHub استعمال کرنے کے لیے <strong style='color:var(--text-primary);'>Git کی ضرورت ہے</strong>، لیکن Git استعمال کرنے کے لیے <strong style='color:var(--text-primary);'>GitHub کی ضرورت نہیں</strong>!">
+                    <strong style="color:#F05032;">Git</strong> is the <strong style="color:var(--text-primary);">engine</strong> — the version control tool that runs on your computer.<br><br><strong style="color:#fff;">GitHub</strong> is the <strong style="color:var(--text-primary);">garage</strong> — the online platform where you park (host) your code, collaborate with others, and showcase your projects.<br><br>🎯 You <strong style="color:var(--text-primary);">need Git</strong> to use GitHub, but you <strong style="color:var(--text-primary);">don't need GitHub</strong> to use Git!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer>
+        <div class="container">
+            <p data-en="Made with <span class='heart'>❤️</span> — Git vs GitHub Complete Guide" 
+               data-ur="<span class='heart'>❤️</span> کے ساتھ بنایا گیا — Git بمقابلہ GitHub مکمل گائیڈ">
+                Made with <span class="heart">❤️</span> — Git vs GitHub Complete Guide
+            </p>
+        </div>
+    </footer>
+
+    <!-- ====== JAVASCRIPT ====== -->
+    <script>
+        // ===== LANGUAGE SWITCHER =====
+        function switchLang(lang) {
+            const body = document.body;
+            const btnEn = document.getElementById('btn-en');
+            const btnUr = document.getElementById('btn-ur');
+            const html = document.documentElement;
+
+            if (lang === 'ur') {
+                body.classList.add('urdu');
+                html.setAttribute('lang', 'ur');
+                html.setAttribute('dir', 'rtl');
+                btnUr.classList.add('active');
+                btnEn.classList.remove('active');
+            } else {
+                body.classList.remove('urdu');
+                html.setAttribute('lang', 'en');
+                html.setAttribute('dir', 'ltr');
+                btnEn.classList.add('active');
+                btnUr.classList.remove('active');
+            }
+
+            // Update all text content
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const text = el.getAttribute(`data-${lang}`);
+                if (text) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.placeholder = text;
+                    } else {
+                        el.innerHTML = text;
+                    }
+                }
+            });
+
+            // Update workflow arrows
+            document.querySelectorAll('.workflow-arrow').forEach(arrow => {
+                arrow.textContent = lang === 'ur' ? '←' : '→';
+            });
+
+            localStorage.setItem('preferred-lang', lang);
+        }
+
+        // ===== SCROLL ANIMATIONS =====
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ===== LOAD SAVED LANGUAGE =====
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('preferred-lang');
+            if (saved) {
+                switchLang(saved);
+            }
+        });
+    </script>
+</body>
+</html>
